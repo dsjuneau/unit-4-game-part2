@@ -28,4 +28,25 @@ img {
   background-color: white;
   height: 100px;
   width: 100px;
+  border: 2px darkblue solid;
+  margin-right: 5px;
+}
+
+.frame {
+  position: relative;
+  width: 140px;
+  float: left;
+}
+.name {
+  position: absolute;
+  top: 2px;
+  width: 100%;
+  text-align: center;
+}
+
+.hp {
+  position: absolute;
+  bottom: 4px;
+  width: 100%;
+  text-align: center;
 }
