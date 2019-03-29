@@ -5,6 +5,7 @@
 // Objects
 
 var game = {
+  characterList: ["obi", "luke", "sidious", "maul"],
   obi: {
     hp: 120,
     ap: 6,
@@ -32,18 +33,47 @@ var game = {
     this.isDefenderChosen = false;
     this.obi.hp = 120;
     this.obi.ap = 6;
-    this.obi.cap = 15;
     //Finish this for every character
     //Then move every one to the top row
   },
   attack: function() {},
   checkScore: function() {},
   updateScreen: function() {},
-  chooseCharacter: function() {}
+  chooseCharacter: function(image) {
+    if (this.characterList.indexOf(image) !== -1) {
+      if (!this.isCharacterChosen) {
+        this.characterList.splice(this.characterList.indexOf(image), 1);
+        this.isCharacterChosen = true;
+        for (var i = 0; i < this.characterList.length; i++) {
+          var imageSelector = '[value="' + this.characterList[i] + '"]';
+          var imageToMove;
+          imageToMove = $(imageSelector).detach();
+          imageToMove.appendTo(".center-row");
+          imageToMove.children().css("backgroundColor", "red");
+        }
+      } else if (!this.isDefenderChosen) {
+        console.log("in here");
+        this.isDefenderChosen = true;
+        var imageSelector =
+          '[value="' +
+          this.characterList[this.characterList.indexOf(image)] +
+          '"]';
+        var imageToMove;
+        imageToMove = $(imageSelector).detach();
+        imageToMove.appendTo(".bottom-row");
+        imageToMove.children().css("backgroundColor", "lightgray");
+        this.characterList.splice(this.characterList.indexOf(image), 1);
+
+        //move selected to defender
+        //toggle isdefender chose
+        //remove image from list
+      }
+    }
+  }
 };
 
 $(".frame").on("click", function() {
-  chooseCharacter();
+  game.chooseCharacter($(this).attr("value"));
 });
 
 $(".attack").on("click", function() {
