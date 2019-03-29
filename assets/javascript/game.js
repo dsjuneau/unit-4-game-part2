@@ -2,10 +2,12 @@
 
 // Variables
 
-// Objects
+// Game Object
 
 var game = {
   characterList: ["obi", "luke", "sidious", "maul"],
+  attacker: "",
+  defender: "",
   obi: {
     hp: 120,
     ap: 6,
@@ -36,12 +38,27 @@ var game = {
     //Finish this for every character
     //Then move every one to the top row
   },
-  attack: function() {},
+  attack: function() {
+    this.defender.hp = this.defender.hp - this.attacker.ap;
+    $(".hp-" + this.defenderName).text(this.defender.hp);
+    if (this.defender.hp <= 0) {
+      // message the screen
+    } else {
+      this.attacker.hp = this.attacker.hp - this.defender.cap;
+      $(".hp-" + this.attackerName).text(this.attacker.hp);
+    }
+    if (this.attacker.hp <= 0) {
+      // message the screen
+      // Present button to reset game.
+    }
+  },
   checkScore: function() {},
   updateScreen: function() {},
   chooseCharacter: function(image) {
     if (this.characterList.indexOf(image) !== -1) {
       if (!this.isCharacterChosen) {
+        this.attackerName = image;
+        this.attacker = this[image];
         this.characterList.splice(this.characterList.indexOf(image), 1);
         this.isCharacterChosen = true;
         for (var i = 0; i < this.characterList.length; i++) {
@@ -52,7 +69,6 @@ var game = {
           imageToMove.children().css("backgroundColor", "red");
         }
       } else if (!this.isDefenderChosen) {
-        console.log("in here");
         this.isDefenderChosen = true;
         var imageSelector =
           '[value="' +
@@ -62,19 +78,21 @@ var game = {
         imageToMove = $(imageSelector).detach();
         imageToMove.appendTo(".bottom-row");
         imageToMove.children().css("backgroundColor", "lightgray");
+        this.defenderName = image;
+        this.defender = this[image];
         this.characterList.splice(this.characterList.indexOf(image), 1);
-
-        //move selected to defender
-        //toggle isdefender chose
-        //remove image from list
       }
     }
   }
 };
 
+//Process event of user clicking on image
+
 $(".frame").on("click", function() {
   game.chooseCharacter($(this).attr("value"));
 });
+
+//Process event of user clicking attack button
 
 $(".attack").on("click", function() {
   game.attack();
