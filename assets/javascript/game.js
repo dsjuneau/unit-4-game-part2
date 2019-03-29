@@ -7,6 +7,7 @@
 var game = {
   characterList: ["obi", "luke", "sidious", "maul"],
   attacker: "",
+  attackerInc: 0,
   defender: "",
   obi: {
     hp: 120,
@@ -30,26 +31,32 @@ var game = {
   },
   isCharacterChosen: false,
   isDefenderChosen: false,
+  isGameOver: false,
   resetGame: function() {
     this.isCharacterChosen = false;
     this.isDefenderChosen = false;
-    this.obi.hp = 120;
-    this.obi.ap = 6;
-    //Finish this for every character
-    //Then move every one to the top row
+    this.isGameOver = false;
+
+    // Move all images back to the starting point.
   },
   attack: function() {
-    this.defender.hp = this.defender.hp - this.attacker.ap;
-    $(".hp-" + this.defenderName).text(this.defender.hp);
-    if (this.defender.hp <= 0) {
-      // message the screen
-    } else {
-      this.attacker.hp = this.attacker.hp - this.defender.cap;
-      $(".hp-" + this.attackerName).text(this.attacker.hp);
-    }
-    if (this.attacker.hp <= 0) {
-      // message the screen
-      // Present button to reset game.
+    if (this.isDefenderChosen && !this.isGameOver) {
+      this.defender.hp = this.defender.hp - this.attacker.ap;
+      $(".hp-" + this.defenderName).text(this.defender.hp);
+      this.attacker.ap += this.attackerInc;
+      if (this.defender.hp <= 0) {
+        this.isDefenderChosen = false;
+        $('[value="' + this.defenderName + '"]').detach();
+      } else {
+        this.attacker.hp = this.attacker.hp - this.defender.cap;
+        $(".hp-" + this.attackerName).text(this.attacker.hp);
+      }
+      // Damage message to the screen
+      if (this.attacker.hp <= 0) {
+        this.isGameOver = true;
+        // message the screen
+        // Present button to reset game.
+      }
     }
   },
   checkScore: function() {},
@@ -59,6 +66,7 @@ var game = {
       if (!this.isCharacterChosen) {
         this.attackerName = image;
         this.attacker = this[image];
+        this.attackerInc = this.attacker.ap;
         this.characterList.splice(this.characterList.indexOf(image), 1);
         this.isCharacterChosen = true;
         for (var i = 0; i < this.characterList.length; i++) {
