@@ -33,11 +33,7 @@ var game = {
   isDefenderChosen: false,
   isGameOver: false,
   resetGame: function() {
-    this.isCharacterChosen = false;
-    this.isDefenderChosen = false;
-    this.isGameOver = false;
-
-    // Move all images back to the starting point.
+    location.reload();
   },
   attack: function() {
     if (this.isDefenderChosen && !this.isGameOver) {
@@ -47,20 +43,34 @@ var game = {
       if (this.defender.hp <= 0) {
         this.isDefenderChosen = false;
         $('[value="' + this.defenderName + '"]').detach();
+        if (this.characterList.length === 0) {
+          this.isGameOver = true;
+          var gameOver = $(".center-row").text("Winner!");
+          gameOver.css("fontSize", "200px");
+          gameOver.css("color", "white");
+          $("#reset").css("display", "inline");
+        }
       } else {
         this.attacker.hp = this.attacker.hp - this.defender.cap;
         $(".hp-" + this.attackerName).text(this.attacker.hp);
       }
-      // Damage message to the screen
+      var attackMsg = this.attacker.ap - this.attackerInc;
+      $("#dmgMessage").text(
+        "Attacker did " +
+          attackMsg +
+          " damage. Defender did " +
+          this.defender.cap +
+          " damage."
+      );
       if (this.attacker.hp <= 0) {
         this.isGameOver = true;
-        // message the screen
-        // Present button to reset game.
+        var gameOver = $(".center-row").text("Game Over");
+        gameOver.css("fontSize", "200px");
+        gameOver.css("color", "white");
+        $("#reset").css("display", "inline");
       }
     }
   },
-  checkScore: function() {},
-  updateScreen: function() {},
   chooseCharacter: function(image) {
     if (this.characterList.indexOf(image) !== -1) {
       if (!this.isCharacterChosen) {
@@ -104,6 +114,9 @@ $(".frame").on("click", function() {
 
 $(".attack").on("click", function() {
   game.attack();
-  game.checkScore();
-  game.updateScreen();
+});
+
+//Process reset button
+$("#reset").on("click", function() {
+  game.resetGame();
 });
